@@ -74,10 +74,10 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="nav-glass-purple border-t border-white/[0.08] md:hidden"
+            className="nav-glass-purple md:hidden"
           >
             <nav
-              className="flex flex-col divide-y divide-white/[0.06] px-5 pb-5 pt-0.5 max-[380px]:px-4 [padding-left:max(1.25rem,env(safe-area-inset-left,0px))] [padding-right:max(1.25rem,env(safe-area-inset-right,0px))]"
+              className="flex flex-col px-5 pb-5 pt-0.5 max-[380px]:px-4 [padding-left:max(1.25rem,env(safe-area-inset-left,0px))] [padding-right:max(1.25rem,env(safe-area-inset-right,0px))]"
               aria-label="Menu principal"
             >
               {links.map((l) => (

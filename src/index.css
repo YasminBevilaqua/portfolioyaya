@@ -39,9 +39,26 @@
   * {
     @apply border-border;
   }
+  /**
+   * Scroll no documento: html cresce com o conteúdo e faz scroll (WebKit/mobile).
+   * `html { height:100%; overflow:hidden }` + scroll no body quebra o scroll em iOS/Safari.
+   */
+  html {
+    scroll-behavior: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    min-height: 100%;
     overflow-x: hidden;
+    overflow-y: visible;
+  }
+  #root {
+    min-height: 100%;
   }
   /**
    * Modo planeta em foco (About): uma única “tela” sem scroll na página — o conteúdo longo fica
@@ -52,10 +69,6 @@
     height: 100%;
     max-height: 100dvh;
     overflow: hidden;
-  }
-  html {
-    scroll-behavior: auto;
-    overflow-y: auto;
   }
 }
 

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
+import type { PlanetFocusIndex } from '@/lib/aboutPlanetLayout';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -9,7 +10,6 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import CustomCursor from '@/components/CustomCursor';
 import { SectionNavProvider, useSectionNav, type SectionId } from '@/lib/SectionNavContext';
-import type { PlanetFocusIndex } from '@/lib/aboutPlanetLayout';
 
 type NonAboutSectionId = Exclude<SectionId, 'about'>;
 
@@ -22,37 +22,45 @@ const sectionMap: Record<NonAboutSectionId, ComponentType> = {
 function ActiveSection({
   aboutPlanetFocus,
   onAboutPlanetFocusChange,
+  /** Só com viewport fixa (planeta no desktop): o filho enche o main; caso contrário a secção cresce com o conteúdo e o body faz scroll (mobile Projetos, etc.). */
+  fillMainForLockedAbout,
 }: {
   aboutPlanetFocus: PlanetFocusIndex | null;
   onAboutPlanetFocusChange: (focus: PlanetFocusIndex | null) => void;
+  fillMainForLockedAbout: boolean;
 }) {
   const { active } = useSectionNav();
-  const [aboutMounted, setAboutMounted] = useState(active === 'about');
   const nonAboutActive = active !== 'about' ? (active as NonAboutSectionId) : null;
   const NonAboutComponent = nonAboutActive ? sectionMap[nonAboutActive] : null;
 
+  /** Precarrega o chunk Sobre no Hero para transição mais suave. */
   useEffect(() => {
-    if (active === 'about') setAboutMounted(true);
+    if (active === 'hero') void import('@/components/About');
   }, [active]);
 
   return (
-    <div className="relative flex min-h-0 flex-1 flex-col">
-      {aboutMounted && (
+    <div
+      className={cn(
+        'relative flex w-full flex-col',
+        /* shrink-0: o flex do main não encolhe esta coluna à altura da viewport (isso cortava o scroll em Projetos). */
+        fillMainForLockedAbout ? 'min-h-0 shrink flex-1' : 'shrink-0',
+      )}
+    >
+      {/*
+        Montar About só com active === 'about'. Manter o About montado por baixo (absolute + opacity 0)
+        bloqueava scroll/toque em vários browsers por causa do Canvas/WebGL e stacking.
+      */}
+      {active === 'about' && (
         <motion.div
-          initial={false}
-          animate={{ opacity: active === 'about' ? 1 : 0, y: active === 'about' ? 0 : 6 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className={
-            active === 'about'
-              ? 'relative flex min-h-0 flex-1 flex-col overflow-hidden max-lg:overflow-visible'
-              : 'pointer-events-none absolute inset-0 overflow-hidden'
-          }
-          aria-hidden={active !== 'about'}
+          className="relative z-[1] flex min-h-0 w-full flex-1 flex-col overflow-hidden max-lg:overflow-visible"
         >
           <Suspense fallback={<div className="min-h-[min(100dvh,900px)] w-full" aria-hidden />}>
             <About onPlanetFocusChange={onAboutPlanetFocusChange} />
           </Suspense>
-          {active === 'about' && aboutPlanetFocus === null && <Footer />}
+          {aboutPlanetFocus === null && <Footer />}
         </motion.div>
       )}
 
@@ -64,7 +72,8 @@ function ActiveSection({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative"
+            className="relative z-[2] w-full max-w-none shrink-0 overflow-visible"
+            style={{ overflow: 'visible' }}
           >
             <NonAboutComponent />
             {nonAboutActive !== 'hero' && <Footer />}
@@ -109,8 +118,8 @@ function MainLayout() {
   return (
     <main
       className={cn(
-        'relative flex flex-col overflow-x-hidden bg-transparent cursor-auto md:cursor-none',
-        lockViewport ? 'h-dvh min-h-0 max-h-dvh overflow-y-hidden' : 'min-h-screen',
+        'relative flex w-full max-w-none flex-col overflow-visible bg-transparent cursor-auto md:cursor-none',
+        lockViewport ? 'h-dvh min-h-0 max-h-dvh overflow-hidden' : 'min-h-screen',
       )}
     >
       <CustomCursor />
@@ -118,6 +127,7 @@ function MainLayout() {
       <ActiveSection
         aboutPlanetFocus={aboutPlanetFocus}
         onAboutPlanetFocusChange={setAboutPlanetFocus}
+        fillMainForLockedAbout={lockViewport}
       />
     </main>
   );
