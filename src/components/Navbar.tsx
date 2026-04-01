@@ -73,23 +73,32 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="nav-glass-purple border-t border-white/10 md:hidden"
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="nav-glass-purple border-t border-white/[0.08] md:hidden"
           >
-            <div className="flex flex-col p-6 gap-4">
+            <nav
+              className="flex flex-col divide-y divide-white/[0.06] px-5 pb-5 pt-0.5 max-[380px]:px-4 [padding-left:max(1.25rem,env(safe-area-inset-left,0px))] [padding-right:max(1.25rem,env(safe-area-inset-right,0px))]"
+              aria-label="Menu principal"
+            >
               {links.map((l) => (
                 <button
                   key={l.id}
+                  type="button"
                   onClick={() => navigate(l.id)}
-                  className={`text-left text-sm ${
+                  className={`w-full py-3 text-right text-base font-medium tracking-normal transition-colors duration-200 first:pt-2 ${
                     active === l.id
-                      ? 'text-foreground font-medium'
-                      : 'text-muted-foreground hover:text-foreground'
+                      ? ''
+                      : 'text-muted-foreground hover:text-foreground active:text-foreground'
                   }`}
                 >
-                  {l.label}
+                  {active === l.id ? (
+                    <span className="text-gradient-neon font-semibold">{l.label}</span>
+                  ) : (
+                    l.label
+                  )}
                 </button>
               ))}
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>

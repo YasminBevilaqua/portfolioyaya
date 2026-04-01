@@ -92,6 +92,7 @@
     -webkit-backdrop-filter: blur(18px) saturate(1.25);
     box-shadow: 0 12px 40px hsl(240 10% 3% / 0.42);
   }
+
   /* Cards Experiência: blur + véu roxo suave (mais leve que a navbar) */
   .experience-card-glass {
     background: linear-gradient(

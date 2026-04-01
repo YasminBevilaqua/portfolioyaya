@@ -34,33 +34,33 @@ export function ExperienceTimeline({ reveal = true }: { reveal?: boolean } = {})
       {/* Timeline line */}
       <div className="absolute left-4 top-0 bottom-0 w-px bg-gradient-to-b from-neon-purple via-neon-pink to-transparent" />
 
-      <div className="space-y-8 md:space-y-12">
+      <div className="space-y-6 md:space-y-12">
         {jobs.map((job, i) => {
           const node = (
-            <div className="relative pl-10 md:pl-12">
+            <div className="relative pl-9 md:pl-12">
               {/* Dot */}
-              <div className="absolute left-0 top-1 flex h-7 w-7 items-center justify-center rounded-full border border-neon-purple/40 bg-secondary glow-purple md:h-8 md:w-8">
-                <Briefcase className="h-3 w-3 shrink-0 text-neon-purple md:h-3.5 md:w-3.5" />
+              <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full border border-neon-purple/40 bg-secondary glow-purple md:h-8 md:w-8">
+                <Briefcase className="h-2.5 w-2.5 shrink-0 text-neon-purple md:h-3.5 md:w-3.5" />
               </div>
 
-              <div className="experience-card-glass neon-border rounded-lg p-4 md:rounded-xl md:p-6">
-                <header className="mb-3 md:mb-5">
-                  <div className="flex flex-col gap-1.5 md:flex-row md:items-start md:justify-between md:gap-4">
+              <div className="experience-card-glass neon-border rounded-lg p-3 md:rounded-xl md:p-6">
+                <header className="mb-2.5 md:mb-5">
+                  <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between md:gap-4">
                     <div className="min-w-0 md:pr-2">
-                      <h3 className="text-base font-bold tracking-tight text-white md:text-lg">{job.role}</h3>
-                      <p className="mt-0.5 text-xs italic leading-snug text-foreground/75 md:mt-1 md:text-sm">
+                      <h3 className="text-sm font-bold tracking-tight text-white md:text-base lg:text-lg">{job.role}</h3>
+                      <p className="mt-0.5 text-[11px] italic leading-snug text-foreground/75 md:mt-1 md:text-sm">
                         {job.company}
                       </p>
                     </div>
-                    <span className="shrink-0 text-[11px] font-medium tracking-wide text-muted-foreground md:pt-1 md:text-right md:text-xs">
+                    <span className="shrink-0 text-[10px] font-medium tracking-wide text-muted-foreground md:pt-1 md:text-right md:text-xs">
                       {job.period}
                     </span>
                   </div>
                 </header>
 
-                <ul className="list-outside list-disc space-y-1.5 pl-4 marker:text-neon-pink md:space-y-2.5 md:pl-5">
+                <ul className="list-outside list-disc space-y-1 pl-3 marker:text-neon-pink md:space-y-2.5 md:pl-5">
                   {job.items.map((item) => (
-                    <li key={item} className="pl-0.5 text-xs leading-relaxed text-white md:pl-1 md:text-sm">
+                    <li key={item} className="pl-0.5 text-[11px] leading-relaxed text-white md:pl-1 md:text-sm">
                       {item}
                     </li>
                   ))}

@@ -739,10 +739,10 @@ export default function AboutPlanet({
           >
             {focusIndex === 0 ? (
               <>
-                <h3 className="text-xl font-semibold tracking-tight sm:text-2xl lg:text-3xl">
+                <h3 className="text-lg font-semibold tracking-tight sm:text-xl md:text-2xl lg:text-3xl">
                   <span className="inline-block text-gradient-neon">Experiência</span>
                 </h3>
-                <div className="mt-2 -translate-y-2">
+                <div className="mt-5 sm:mt-6 lg:mt-8">
                   <ExperienceTimeline reveal />
                 </div>
               </>
