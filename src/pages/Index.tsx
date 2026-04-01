@@ -96,10 +96,9 @@ function MainLayout() {
   return (
     <main
       className={cn(
-        'relative flex flex-col overflow-x-hidden bg-transparent',
+        'relative flex flex-col overflow-x-hidden bg-transparent cursor-auto md:cursor-none',
         lockViewport ? 'h-dvh min-h-0 max-h-dvh overflow-y-hidden' : 'min-h-screen',
       )}
-      style={{ cursor: 'none' }}
     >
       <CustomCursor />
       <Navbar />

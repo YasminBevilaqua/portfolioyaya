@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import ScrollReveal from './ScrollReveal';
 import SectionTitle from './SectionTitle';
 import AboutPlanet from './AboutPlanet';
+import AboutPlanetMobilePickers from './AboutPlanetMobilePickers';
 import type { PlanetFocusIndex } from '@/lib/aboutPlanetLayout';
 
 type AboutProps = {
@@ -41,12 +42,22 @@ export default function About({ onPlanetFocusChange }: AboutProps) {
             : '',
         )}
       >
-        <div className="mx-auto w-full max-w-4xl shrink-0 px-1">
+        <div
+          className={cn(
+            'mx-auto w-full max-w-4xl shrink-0 px-1',
+            planetFocus !== null &&
+              'max-md:[&>div]:!mb-4 md:[&>div]:!mb-16',
+          )}
+        >
           <SectionTitle>
             <span className="text-white">Sobre </span>
             <span className="text-gradient-neon">Mim</span>
           </SectionTitle>
         </div>
+
+        {planetFocus !== null && (
+          <AboutPlanetMobilePickers focusIndex={planetFocus} onSelectPlanet={setPlanetFocus} />
+        )}
 
         <ScrollReveal
           fadeOnly
@@ -59,7 +70,7 @@ export default function About({ onPlanetFocusChange }: AboutProps) {
               : 'sm:mt-12 md:mt-14',
           )}
         >
-          <AboutPlanet onFocusChange={setPlanetFocus} />
+          <AboutPlanet focusIndex={planetFocus} onFocusChange={setPlanetFocus} />
         </ScrollReveal>
       </div>
     </section>

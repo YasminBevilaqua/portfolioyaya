@@ -30,11 +30,13 @@ import { TechIconsGrid } from '@/components/TechStack';
 const TEXTURE_VARIANTS: PlanetTextureVariant[] = ['gas-orange', 'gas-pink', 'jupiter-purple'];
 const PLANET_TEXTURE_CACHE = new Map<string, THREE.CanvasTexture>();
 
-const PLANET_NAMES: Record<PlanetFocusIndex, string> = {
+export const ABOUT_PLANET_TAB_LABELS: Record<PlanetFocusIndex, string> = {
   0: 'Experiência',
   1: 'Stack',
   2: 'Quem Sou',
 };
+
+const PLANET_NAMES = ABOUT_PLANET_TAB_LABELS;
 
 /** Tela 1 — idle: nenhum planeta selecionado. */
 const PLANET_LABEL_FONT_SCREEN1 = 'clamp(12px, 2.4vw, 19px)';
@@ -630,11 +632,12 @@ function Scene({
 }
 
 export default function AboutPlanet({
+  focusIndex,
   onFocusChange,
 }: {
-  onFocusChange?: (index: PlanetFocusIndex | null) => void;
-} = {}) {
-  const [focusIndex, setFocusIndex] = useState<PlanetFocusIndex | null>(null);
+  focusIndex: PlanetFocusIndex | null;
+  onFocusChange: (index: PlanetFocusIndex | null) => void;
+}) {
   const [transitionPhase, setTransitionPhase] = useState<FocusTransitionPhase>('none');
   const [uiFade, setUiFade] = useState(1);
   const fadeMulRef = useRef(1);
@@ -652,10 +655,6 @@ export default function AboutPlanet({
     }
   }, [transitionPhase]);
 
-  useEffect(() => {
-    onFocusChange?.(focusIndex);
-  }, [focusIndex, onFocusChange]);
-
   const beginFocusLayoutChange = () => {
     scrollYToRestore.current = window.scrollY;
   };
@@ -671,7 +670,7 @@ export default function AboutPlanet({
     const p = pendingRef.current;
     pendingRef.current = null;
     if (!p || p.kind !== 'open') return;
-    setFocusIndex(p.index);
+    onFocusChange(p.index);
     setTransitionPhase('fadeIn');
   }, []);
 
@@ -694,12 +693,12 @@ export default function AboutPlanet({
         return;
       }
       if (focusIndex === index) {
-        setFocusIndex(null);
+        onFocusChange(null);
         return;
       }
-      setFocusIndex(index);
+      onFocusChange(index);
     },
-    [focusIndex, transitionPhase],
+    [focusIndex, transitionPhase, onFocusChange],
   );
 
   const copy = focusIndex !== null ? FOCUS_COPY[focusIndex] : null;

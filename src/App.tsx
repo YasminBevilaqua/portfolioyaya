@@ -21,22 +21,19 @@ function App() {
       cleanupWarmTextures = prewarmAboutPlanetTexturesChunked();
     };
 
-    let timeoutId: number | null = null;
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const w = window as Window & {
-        requestIdleCallback: (cb: () => void, opts?: { timeout?: number }) => number;
-        cancelIdleCallback: (id: number) => void;
-      };
-      const idleId = w.requestIdleCallback(warm, { timeout: 1500 });
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const idle = globalThis.requestIdleCallback;
+    if (typeof idle === "function") {
+      const idleId = idle.call(globalThis, warm, { timeout: 1500 });
       return () => {
-        w.cancelIdleCallback(idleId);
+        globalThis.cancelIdleCallback(idleId);
         cleanupWarmTextures?.();
       };
     }
 
-    timeoutId = window.setTimeout(warm, 300);
+    timeoutId = globalThis.setTimeout(warm, 300);
     return () => {
-      if (timeoutId !== null) window.clearTimeout(timeoutId);
+      if (timeoutId !== null) globalThis.clearTimeout(timeoutId);
       cleanupWarmTextures?.();
     };
   }, []);
