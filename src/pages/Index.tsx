@@ -44,7 +44,7 @@ function ActiveSection({
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className={
             active === 'about'
-              ? 'relative flex min-h-0 flex-1 flex-col overflow-hidden'
+              ? 'relative flex min-h-0 flex-1 flex-col overflow-hidden max-lg:overflow-visible'
               : 'pointer-events-none absolute inset-0 overflow-hidden'
           }
           aria-hidden={active !== 'about'}
@@ -78,7 +78,20 @@ function ActiveSection({
 function MainLayout() {
   const { active } = useSectionNav();
   const [aboutPlanetFocus, setAboutPlanetFocus] = useState<PlanetFocusIndex | null>(null);
-  const lockViewport = active === 'about' && aboutPlanetFocus !== null && aboutPlanetFocus !== 1;
+  /** Só trava scroll da página no desktop (layout 2 colunas). No mobile, scroll da página inteira como no planeta Stack. */
+  const [isLgUp, setIsLgUp] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const sync = () => setIsLgUp(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  const lockViewport =
+    active === 'about' &&
+    aboutPlanetFocus !== null &&
+    aboutPlanetFocus !== 1 &&
+    isLgUp;
 
   useEffect(() => {
     if (active !== 'about') setAboutPlanetFocus(null);

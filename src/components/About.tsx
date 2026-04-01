@@ -23,9 +23,10 @@ export default function About({ onPlanetFocusChange }: AboutProps) {
       className={cn(
         'section-soft-bg relative isolate z-10 flex flex-col items-center overflow-x-hidden px-4 sm:px-6',
         planetFocus !== null
-          ? planetFocus === 1
-            ? 'min-h-screen min-h-dvh justify-start overflow-visible pt-[calc(4rem+1.25rem)] pb-24'
-            : 'h-full min-h-0 flex-1 justify-start overflow-hidden pt-[calc(4rem+1.25rem)] pb-0'
+          ? cn(
+              'justify-start pt-[calc(4rem+1.25rem)] min-h-screen min-h-dvh overflow-visible pb-24',
+              planetFocus !== 1 && 'lg:h-full lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:pb-0',
+            )
           : 'section-padding-top min-h-screen min-h-dvh justify-start pb-24',
         planetFocus === 2 ? 'about--blob-eu-sou' : '',
       )}
@@ -38,7 +39,7 @@ export default function About({ onPlanetFocusChange }: AboutProps) {
         className={cn(
           'relative z-[1] flex w-full min-h-0 flex-1 flex-col items-center justify-start',
           planetFocus !== null
-            ? `max-w-none ${planetFocus === 1 ? 'overflow-visible' : 'overflow-hidden'}`
+            ? cn('max-w-none overflow-visible', planetFocus !== 1 && 'lg:overflow-hidden')
             : '',
         )}
       >
@@ -64,9 +65,10 @@ export default function About({ onPlanetFocusChange }: AboutProps) {
           className={cn(
             'pointer-events-auto mt-6 w-full sm:mt-8 md:mt-10',
             planetFocus !== null
-              ? `mt-4 flex min-h-0 flex-1 flex-col sm:mt-5 ${
-                  planetFocus === 1 ? 'overflow-visible' : 'overflow-hidden'
-                }`
+              ? cn(
+                  'mt-4 flex min-h-0 flex-1 flex-col overflow-visible sm:mt-5',
+                  planetFocus !== 1 && 'lg:overflow-hidden',
+                )
               : 'sm:mt-12 md:mt-14',
           )}
         >

@@ -706,7 +706,11 @@ export default function AboutPlanet({
   return (
     <div
       className={`mx-auto flex min-h-0 w-full flex-col gap-8 ${
-        focusIndex === 1 ? 'overflow-visible' : 'overflow-x-hidden'
+        focusIndex === null
+          ? 'overflow-x-hidden'
+          : focusIndex === 1
+            ? 'overflow-visible'
+            : 'overflow-x-hidden max-lg:overflow-visible'
       } lg:flex-row lg:items-stretch ${
         focusIndex !== null
           ? 'mb-0 h-full min-h-0 w-full max-w-none flex-1 flex-col justify-between gap-4 sm:gap-5 lg:flex-row lg:gap-3 xl:gap-5'
@@ -719,7 +723,7 @@ export default function AboutPlanet({
             ? focusIndex === 1
               ? /* Stack: coluna mais larga + overflow visível para o glow dos ícones (planetas/canvas inalterados) */
                 'pointer-events-auto min-h-0 w-full max-h-none overflow-visible px-4 sm:px-5 md:px-6 lg:max-w-[min(100%,min(72rem,96vw))] lg:w-[min(100%,min(72rem,96vw))] lg:shrink-0 lg:basis-[min(100%,min(64rem,66vw))] lg:flex-none lg:pl-8 xl:pl-12 2xl:pl-16 lg:pr-5'
-              : `pointer-events-auto min-h-0 w-full max-w-[min(100%,54rem)] overflow-x-hidden px-5 sm:px-6 md:px-8 lg:max-w-[min(100%,54rem)] lg:shrink-0 lg:basis-[min(100%,min(54rem,52vw))] lg:pl-11 xl:pl-16 2xl:pl-20 lg:pr-6 max-h-full overflow-y-auto overscroll-contain`
+              : `pointer-events-auto min-h-0 w-full max-w-[min(100%,54rem)] overflow-x-hidden px-5 sm:px-6 md:px-8 lg:max-w-[min(100%,54rem)] lg:shrink-0 lg:basis-[min(100%,min(54rem,52vw))] lg:pl-11 xl:pl-16 2xl:pl-20 lg:pr-6 max-lg:max-h-none max-lg:overflow-y-visible lg:max-h-full lg:overflow-y-auto lg:overscroll-contain`
             : 'pointer-events-none max-h-0 overflow-hidden opacity-0 lg:max-w-0 lg:overflow-hidden'
         }`}
         style={focusIndex !== null ? { opacity: uiFade } : undefined}
@@ -778,6 +782,9 @@ export default function AboutPlanet({
           focusIndex !== null
             ? 'min-h-[min(36dvh,22rem)] h-[min(42dvh,calc(100dvh-13rem))] max-h-full flex-1 pb-0 sm:min-h-[min(38dvh,24rem)] sm:h-[min(44dvh,calc(100dvh-13.5rem))] lg:min-h-0 lg:h-full lg:max-h-none lg:pb-0'
             : 'h-[min(540px,72vmin)] sm:h-[580px]'
+        } ${
+          /* Mobile: fileira de planetas fica em AboutPlanetMobilePickers; esconde o canvas grande em modo foco. */
+          focusIndex !== null ? 'max-md:hidden' : ''
         }`}
       >
         <Canvas

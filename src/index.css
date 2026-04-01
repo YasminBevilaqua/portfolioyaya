@@ -152,6 +152,23 @@
   .tech-icon-grid--spacious .tech-icon-reflect {
     max-height: 2.42rem;
   }
+  /* 3 colunas no Stack (planeta): ícones e hit-area um pouco menores só em mobile */
+  @media (max-width: 639px) {
+    .tech-icon-grid--spacious .tech-icon-link {
+      min-width: 5.75rem;
+      min-height: 8rem;
+      padding: 0.85rem 0.45rem 0.7rem;
+    }
+    .tech-icon-grid--spacious .tech-icon-img {
+      max-height: 2.28rem;
+    }
+    .tech-icon-grid--spacious .tech-icon-reflect {
+      max-height: 1.98rem;
+    }
+    .tech-icon-grid--spacious .tech-icon-cell {
+      padding: 0.3rem 0.15rem 0.2rem;
+    }
+  }
   @media (min-width: 640px) {
     .tech-icon-grid--spacious .tech-icon-img {
       max-height: 3rem;
@@ -875,6 +892,111 @@
     }
     75% {
       transform: translate3d(0, 6px, 0) rotateZ(1.2deg) scale(0.992);
+    }
+  }
+
+  /* Contato: cartões menores + animação mais suave só em mobile (max-sm); web inalterado */
+  @keyframes contact-card-tilt-breathe-sm {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1);
+    }
+    25% {
+      transform: translate3d(0, -2px, 0) rotateZ(-0.45deg) scale(1.006);
+    }
+    50% {
+      transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1.004);
+    }
+    75% {
+      transform: translate3d(0, 2px, 0) rotateZ(0.45deg) scale(0.997);
+    }
+  }
+
+  @media (max-width: 639px) {
+    /*
+     * Pai em flex + margin auto na ul; sem left/transform duplo (evita conflito com animação do ScrollReveal).
+     * translate3d fino compensa o viés visual da perspetiva/rotação.
+     */
+    .contact-social-stack {
+      --card-w: 6.35rem;
+      --card-h: 9.35rem;
+      gap: 0.52rem;
+      width: fit-content;
+      max-width: min(100%, calc(100vw - 1.25rem));
+      margin-inline: auto;
+      padding-inline: 0;
+      box-sizing: border-box;
+      position: relative;
+      left: auto;
+      transform: perspective(560px) rotateX(30deg) rotateZ(-13deg) translate3d(0.4rem, 0, 0) scale(0.96);
+      transform-origin: center center;
+    }
+
+    .contact-social-stack li {
+      animation: contact-card-tilt-breathe-sm 4.5s ease-in-out infinite;
+    }
+
+    .contact-social-stack li a svg {
+      width: 1.52rem;
+      height: 1.52rem;
+    }
+
+    .contact-social-stack li:hover a {
+      transform: translate3d(0, -1px, 8px);
+    }
+
+    .contact-social-stack li:hover a svg {
+      transform: translate3d(calc(-50% + 12px), calc(-50% - 12px), 32px);
+    }
+
+    .contact-social-stack li:nth-child(1):hover a svg {
+      transform: translate3d(calc(-50% + 10px), calc(-50% - 12px), 32px);
+    }
+
+    .contact-social-stack li:nth-child(2) a svg {
+      transform: translate3d(calc(-50% - 8px), -50%, 24px);
+    }
+
+    .contact-social-stack li:nth-child(2):hover a svg {
+      transform: translate3d(calc(-50% + 12px), calc(-50% - 12px), 32px);
+    }
+
+    .contact-social-stack li:nth-child(3) a svg {
+      transform: translate3d(calc(-50% - 11px), -50%, 24px);
+    }
+
+    .contact-social-stack li:nth-child(3):hover a svg {
+      transform: translate3d(calc(-50% + 11px), calc(-50% - 12px), 32px);
+    }
+
+    .contact-social-stack li:nth-child(4) a svg {
+      transform: translate3d(calc(-50% - 16px), -50%, 24px);
+    }
+
+    .contact-social-stack li:nth-child(4):hover a svg {
+      transform: translate3d(calc(-50% + 11px), calc(-50% - 12px), 32px);
+    }
+
+    .contact-social-stack li:hover a span:nth-child(2) {
+      transform: translate3d(5px, -5px, 5px);
+    }
+
+    .contact-social-stack li:hover a span:nth-child(3) {
+      transform: translate3d(8px, -8px, 8px);
+    }
+
+    .contact-social-stack li:hover a span:nth-child(4) {
+      transform: translate3d(11px, -11px, 11px);
+    }
+
+    .contact-social-stack li:hover a span:nth-child(5) {
+      transform: translate3d(14px, -14px, 14px);
+    }
+  }
+
+  @media (max-width: 639px) and (prefers-reduced-motion: reduce) {
+    .contact-social-stack li {
+      animation: none;
     }
   }
 }

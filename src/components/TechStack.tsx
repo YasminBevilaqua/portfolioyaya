@@ -20,31 +20,39 @@ const techIcons: { name: string; file: string; color: string }[] = [
 const DOCK_SHIFT_PX = 14;
 const DOCK_SCALE = 1.14;
 
-function useGridCols(): number {
+function useGridCols(spacious: boolean): number {
   const [cols, setCols] = useState(4);
   useEffect(() => {
     const sync = () => {
       const w = window.innerWidth;
       if (w >= 768) setCols(4);
       else if (w >= 640) setCols(3);
-      else setCols(2);
+      else setCols(spacious ? 3 : 2);
     };
     sync();
     window.addEventListener('resize', sync);
     return () => window.removeEventListener('resize', sync);
-  }, []);
+  }, [spacious]);
   return cols;
 }
 
-function dockTranslateX(index: number, hovered: number | null, cols: number): number {
+/** Desktop: últimos 3 ícones num flex — dock só entre eles. Mobile (grade única): dock por linha da grid. */
+function dockTranslateX(
+  index: number,
+  hovered: number | null,
+  cols: number,
+  splitLastRow: boolean,
+): number {
   if (hovered === null) return 0;
   if (index === hovered) return 0;
 
-  if (index >= 8 && hovered >= 8) {
-    return index < hovered ? -DOCK_SHIFT_PX : DOCK_SHIFT_PX;
+  if (splitLastRow) {
+    if (index >= 8 && hovered >= 8) {
+      return index < hovered ? -DOCK_SHIFT_PX : DOCK_SHIFT_PX;
+    }
+    if (hovered >= 8 && index < 8) return 0;
+    if (index >= 8 && hovered < 8) return 0;
   }
-  if (hovered >= 8 && index < 8) return 0;
-  if (index >= 8 && hovered < 8) return 0;
 
   const rowH = Math.floor(hovered / cols);
   const rowI = Math.floor(index / cols);
@@ -64,6 +72,7 @@ function TechIconCell({
   hoveredIndex,
   onEnter,
   spacious = false,
+  splitLastRow,
 }: {
   t: (typeof techIcons)[number];
   index: number;
@@ -71,8 +80,9 @@ function TechIconCell({
   hoveredIndex: number | null;
   onEnter: (i: number) => void;
   spacious?: boolean;
+  splitLastRow: boolean;
 }) {
-  const tx = dockTranslateX(index, hoveredIndex, cols);
+  const tx = dockTranslateX(index, hoveredIndex, cols, splitLastRow);
   const scale = dockScale(index, hoveredIndex);
   const active = hoveredIndex === index;
 
@@ -115,13 +125,36 @@ function TechIconCell({
   );
 }
 
+const assetsBase = `${import.meta.env.BASE_URL}images/`;
+
 const techIconsFirstRows = techIcons.slice(0, 8);
 const techIconsLastRow = techIcons.slice(8);
-const assetsBase = `${import.meta.env.BASE_URL}images/`;
+/** Mobile 3 col: 9 ícones em 3×3; Vue + Python numa linha centralizada abaixo. */
+const techIconsMobileUnifiedHead = techIcons.slice(0, 9);
+const techIconsMobileUnifiedTail = techIcons.slice(9);
+
+/** Alinhado ao Tailwind `max-sm` (639px): grade única no mobile; a partir de `sm` layout web anterior (8 + flex). */
+function useIsMaxSm() {
+  const [isMaxSm, setIsMaxSm] = useState(() =>
+    typeof globalThis.window !== 'undefined'
+      ? globalThis.window.matchMedia('(max-width: 639px)').matches
+      : false,
+  );
+  useEffect(() => {
+    const mq = globalThis.window.matchMedia('(max-width: 639px)');
+    const sync = () => setIsMaxSm(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  return isMaxSm;
+}
 
 export function TechIconsGrid({ spacious = false }: { spacious?: boolean } = {}) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const cols = useGridCols();
+  const cols = useGridCols(spacious);
+  const isMaxSm = useIsMaxSm();
+  const splitLastRow = !isMaxSm;
 
   const onEnter = useCallback((i: number) => setHoveredIndex(i), []);
 
@@ -132,40 +165,104 @@ export function TechIconsGrid({ spacious = false }: { spacious?: boolean } = {})
   }, []);
 
   const gapClass = spacious
-    ? 'gap-y-12 gap-x-5 sm:gap-x-6 md:gap-x-7 lg:gap-x-8'
+    ? isMaxSm
+      ? 'gap-y-9 gap-x-2.5 sm:gap-y-12 sm:gap-x-6 md:gap-x-7 lg:gap-x-8'
+      : 'gap-y-12 gap-x-5 sm:gap-x-6 md:gap-x-7 lg:gap-x-8'
     : 'gap-y-12 gap-x-4';
-  const lastRowGap = spacious ? 'gap-x-6 gap-y-12 sm:gap-x-7 md:gap-x-8' : 'gap-x-4 gap-y-12';
-  const gridPadding = spacious ? 'px-2 py-5 sm:px-3 md:px-4' : 'py-2';
+  const lastRowGap = spacious
+    ? 'gap-x-6 gap-y-12 sm:gap-x-7 md:gap-x-8'
+    : 'gap-x-4 gap-y-12';
+  const gridPadding = spacious
+    ? isMaxSm
+      ? 'px-1.5 py-5 sm:px-3 md:px-4'
+      : 'px-2 py-5 sm:px-3 md:px-4'
+    : 'py-2';
+  const gridColsClass = spacious
+    ? 'grid-cols-3 sm:grid-cols-3 md:grid-cols-4'
+    : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4';
+  const lastRowSpanClass = spacious
+    ? 'col-span-3 sm:col-span-3 md:col-span-4'
+    : 'col-span-2 sm:col-span-3 md:col-span-4';
 
   return (
     <div
-      className={`tech-icon-grid grid grid-cols-2 overflow-visible pb-16 sm:grid-cols-3 md:grid-cols-4 ${gapClass} ${gridPadding} ${spacious ? 'tech-icon-grid--spacious' : ''}`}
+      className={`tech-icon-grid grid ${gridColsClass} overflow-visible pb-16 ${gapClass} ${gridPadding} ${spacious ? 'tech-icon-grid--spacious' : ''}`}
       onMouseLeave={onLeaveGrid}
     >
-      {techIconsFirstRows.map((t, i) => (
-        <TechIconCell
-          key={t.file}
-          t={t}
-          index={i}
-          cols={cols}
-          hoveredIndex={hoveredIndex}
-          onEnter={onEnter}
-          spacious={spacious}
-        />
-      ))}
-      <div className={`col-span-2 flex flex-wrap justify-center sm:col-span-3 md:col-span-4 ${lastRowGap}`}>
-        {techIconsLastRow.map((t, i) => (
-          <TechIconCell
-            key={t.file}
-            t={t}
-            index={8 + i}
-            cols={cols}
-            hoveredIndex={hoveredIndex}
-            onEnter={onEnter}
-            spacious={spacious}
-          />
-        ))}
-      </div>
+      {isMaxSm ? (
+        spacious ? (
+          <>
+            {techIconsMobileUnifiedHead.map((t, i) => (
+              <TechIconCell
+                key={t.file}
+                t={t}
+                index={i}
+                cols={cols}
+                hoveredIndex={hoveredIndex}
+                onEnter={onEnter}
+                spacious={spacious}
+                splitLastRow={false}
+              />
+            ))}
+            <div className="col-span-3 flex flex-wrap justify-center gap-x-8 gap-y-9">
+              {techIconsMobileUnifiedTail.map((t, i) => (
+                <TechIconCell
+                  key={t.file}
+                  t={t}
+                  index={9 + i}
+                  cols={cols}
+                  hoveredIndex={hoveredIndex}
+                  onEnter={onEnter}
+                  spacious={spacious}
+                  splitLastRow={false}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          techIcons.map((t, i) => (
+            <TechIconCell
+              key={t.file}
+              t={t}
+              index={i}
+              cols={cols}
+              hoveredIndex={hoveredIndex}
+              onEnter={onEnter}
+              spacious={spacious}
+              splitLastRow={false}
+            />
+          ))
+        )
+      ) : (
+        <>
+          {techIconsFirstRows.map((t, i) => (
+            <TechIconCell
+              key={t.file}
+              t={t}
+              index={i}
+              cols={cols}
+              hoveredIndex={hoveredIndex}
+              onEnter={onEnter}
+              spacious={spacious}
+              splitLastRow
+            />
+          ))}
+          <div className={`${lastRowSpanClass} flex flex-wrap justify-center ${lastRowGap}`}>
+            {techIconsLastRow.map((t, i) => (
+              <TechIconCell
+                key={t.file}
+                t={t}
+                index={8 + i}
+                cols={cols}
+                hoveredIndex={hoveredIndex}
+                onEnter={onEnter}
+                spacious={spacious}
+                splitLastRow
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
