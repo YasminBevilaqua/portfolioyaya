@@ -1,0 +1,880 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 12% 2%;
+    --foreground: 0 0% 95%;
+    --card: 240 8% 8%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 8% 8%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 272 72% 46%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 6% 14%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 240 6% 14%;
+    --muted-foreground: 240 4% 55%;
+    --accent: 340 100% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 18%;
+    --input: 240 6% 18%;
+    --ring: 272 72% 46%;
+    --radius: 0.75rem;
+
+    --neon-purple: 272 72% 46%;
+    --neon-pink: 340 100% 65%;
+    --neon-orange: 26 100% 55%;
+    --glass: 240 8% 12%;
+    --glass-border: 240 6% 22%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+  }
+  /**
+   * Modo planeta em foco (About): uma única “tela” sem scroll na página — o conteúdo longo fica
+   * só na coluna de texto com scroll interno se necessário.
+   */
+  html.about-planet-focus,
+  html.about-planet-focus body {
+    height: 100%;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+  html {
+    scroll-behavior: auto;
+    overflow-y: auto;
+  }
+}
+
+.stars-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@layer utilities {
+  .text-gradient-neon {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--neon-purple)), hsl(var(--neon-pink)), hsl(var(--neon-orange)));
+  }
+  .bg-gradient-neon {
+    background-image: linear-gradient(135deg, hsl(var(--neon-purple)), hsl(var(--neon-pink)), hsl(var(--neon-orange)));
+  }
+  .glass {
+    background: hsl(var(--glass) / 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--glass-border) / 0.4);
+  }
+  /* Navbar: vidro escuro com blur (sem tom roxo) */
+  .nav-glass-purple {
+    background: linear-gradient(
+      180deg,
+      hsl(240 12% 8% / 0.74),
+      hsl(240 10% 4% / 0.62)
+    );
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+    box-shadow: 0 12px 40px hsl(240 10% 3% / 0.42);
+  }
+  /* Cards Experiência: blur + véu roxo suave (mais leve que a navbar) */
+  .experience-card-glass {
+    background: linear-gradient(
+      180deg,
+      hsl(272 42% 9% / 0.16),
+      hsl(272 40% 5% / 0.12)
+    );
+    backdrop-filter: blur(8px) saturate(1.15);
+    -webkit-backdrop-filter: blur(8px) saturate(1.15);
+  }
+  /* Secções após o hero: véu escuro leve — sem backdrop-blur (o blur escondia o WebGL) */
+  .section-soft-bg {
+    background: hsl(var(--background) / 0.48);
+  }
+  /* Nav fixa = h-16 (4rem); mesmo respiro até ao título em todas as secções */
+  .section-padding-top {
+    padding-top: calc(4rem + 3rem);
+  }
+  .glow-purple {
+    box-shadow: 0 0 20px hsl(var(--neon-purple) / 0.3), 0 0 60px hsl(var(--neon-purple) / 0.1);
+  }
+  .glow-pink {
+    box-shadow: 0 0 20px hsl(var(--neon-pink) / 0.3), 0 0 60px hsl(var(--neon-pink) / 0.1);
+  }
+  .glow-text {
+    text-shadow:
+      0 0 32px hsl(272 82% 52% / 0.6),
+      0 0 72px hsl(278 72% 42% / 0.35),
+      0 0 120px hsl(270 65% 38% / 0.18);
+  }
+
+  /* Tech icons: brilho no hover só no PNG principal — drop-shadow segue a forma (alpha); reflexo sem glow */
+  .tech-icon-link {
+    --color: hsl(var(--neon-purple));
+    position: relative;
+    box-sizing: border-box;
+    margin-inline: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* blur ~48px no glow: precisa de margem interna ou o brilho corta em “caixa” */
+    min-width: 8.5rem;
+    min-height: 10.75rem;
+    padding: 1.35rem 1.1rem 1.15rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    background: transparent;
+    overflow: visible;
+  }
+  .tech-icon-grid--spacious .tech-icon-link {
+    min-width: 8.1rem;
+    min-height: 10.25rem;
+    padding: 1.35rem 1rem 1.05rem;
+  }
+  .tech-icon-grid--spacious .tech-icon-img {
+    max-height: 2.78rem;
+  }
+  .tech-icon-grid--spacious .tech-icon-reflect {
+    max-height: 2.42rem;
+  }
+  @media (min-width: 640px) {
+    .tech-icon-grid--spacious .tech-icon-img {
+      max-height: 3rem;
+    }
+    .tech-icon-grid--spacious .tech-icon-reflect {
+      max-height: 2.62rem;
+    }
+  }
+  .about-stack-icon-surface {
+    padding-inline: clamp(0.1rem, 1vw, 0.5rem);
+    padding-block: clamp(0.2rem, 1vw, 0.5rem);
+  }
+  .tech-icon-grid--spacious .tech-icon-cell {
+    padding: 0.45rem 0.3rem 0.3rem;
+  }
+  @media (min-width: 640px) {
+    .tech-icon-grid--spacious .tech-icon-cell {
+      padding: 0.55rem 0.4rem 0.3rem;
+    }
+  }
+  .tech-icon-link--active .tech-icon-img {
+    filter:
+      drop-shadow(0 0 6px var(--color))
+      drop-shadow(0 0 14px var(--color))
+      drop-shadow(0 0 28px var(--color))
+      drop-shadow(0 0 48px var(--color));
+  }
+  .tech-icon-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.15rem;
+    pointer-events: none;
+  }
+  .tech-icon-img {
+    max-height: 3.41rem;
+    width: auto;
+    object-fit: contain;
+    transition: filter 0.5s ease;
+  }
+  .tech-icon-reflect {
+    max-height: 2.99rem;
+    width: auto;
+    object-fit: contain;
+    transform: scaleY(-1);
+    opacity: 0.45;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+    transition: filter 0.5s ease, opacity 0.5s ease;
+  }
+  @media (min-width: 640px) {
+    .tech-icon-img {
+      max-height: 3.68rem;
+    }
+    .tech-icon-reflect {
+      max-height: 3.26rem;
+    }
+  }
+  .neon-border {
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  .neon-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--neon-purple) / 0.5), hsl(var(--neon-pink) / 0.5), hsl(var(--neon-orange) / 0.5));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* Hero CTA — glow em camadas (hover), brilho interno (::before) */
+  .btn-glow-neon {
+    @apply relative inline-flex items-center justify-center overflow-hidden rounded-lg;
+    transition:
+      box-shadow 0.35s ease-in-out,
+      transform 0.2s ease,
+      background-color 0.35s ease,
+      background-image 0.35s ease,
+      border-color 0.3s ease,
+      color 0.25s ease,
+      backdrop-filter 0.35s ease;
+    box-shadow:
+      0 0 12px hsl(var(--neon-purple) / 0.55),
+      0 0 28px hsl(var(--neon-pink) / 0.35),
+      0 0 56px hsl(var(--neon-orange) / 0.2);
+  }
+  .btn-glow-neon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at 50% 40%,
+      hsl(0 0% 100% / 0.28),
+      hsl(var(--neon-pink) / 0.08) 45%,
+      transparent 70%
+    );
+    transform: scale(0);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .btn-glow-neon:hover::before {
+    transform: scale(1);
+  }
+  .btn-glow-neon:hover {
+    box-shadow:
+      0 0 18px hsl(var(--neon-purple) / 0.85),
+      0 0 48px hsl(var(--neon-pink) / 0.55),
+      0 0 100px hsl(var(--neon-orange) / 0.35);
+  }
+  .btn-glow-neon:active {
+    transform: scale(0.97);
+  }
+
+  /* CTA secundário: contorno néon + glass → gradiente + glow no hover */
+  .btn-glow-neon-ghost {
+    @apply relative inline-flex items-center justify-center overflow-hidden rounded-lg;
+    transition:
+      box-shadow 0.35s ease-in-out,
+      transform 0.2s ease,
+      background-color 0.35s ease,
+      background-image 0.35s ease,
+      border-color 0.3s ease,
+      color 0.25s ease,
+      backdrop-filter 0.35s ease;
+    border: 1px solid transparent;
+    background-image:
+      linear-gradient(hsl(var(--glass) / 0.72), hsl(var(--glass) / 0.72)),
+      linear-gradient(135deg, hsl(var(--neon-purple) / 0.55), hsl(var(--neon-pink) / 0.48), hsl(var(--neon-orange) / 0.42));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    backdrop-filter: blur(20px);
+    color: hsl(var(--foreground));
+    box-shadow: 0 0 18px hsl(var(--neon-purple) / 0.08);
+  }
+  .btn-glow-neon-ghost::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at 50% 40%,
+      hsl(0 0% 100% / 0.28),
+      hsl(var(--neon-pink) / 0.08) 45%,
+      transparent 70%
+    );
+    transform: scale(0);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .btn-glow-neon-ghost:hover {
+    border-color: transparent;
+    color: hsl(var(--primary-foreground));
+    background-image: linear-gradient(135deg, hsl(var(--neon-purple)), hsl(var(--neon-pink)), hsl(var(--neon-orange)));
+    background-origin: border-box;
+    background-clip: border-box;
+    backdrop-filter: none;
+    box-shadow:
+      0 0 18px hsl(var(--neon-purple) / 0.85),
+      0 0 48px hsl(var(--neon-pink) / 0.55),
+      0 0 100px hsl(var(--neon-orange) / 0.35);
+  }
+  .btn-glow-neon-ghost:hover::before {
+    transform: scale(1);
+  }
+  .btn-glow-neon-ghost:active {
+    transform: scale(0.97);
+  }
+
+  /* Hover em “Contato” → “Ver Projetos” com o mesmo aspeto glass + contorno do Contato */
+  .hero-cta-group:has(.btn-glow-neon-ghost:hover) .btn-glow-neon--projects {
+    background-image:
+      linear-gradient(hsl(var(--glass) / 0.72), hsl(var(--glass) / 0.72)),
+      linear-gradient(135deg, hsl(var(--neon-purple) / 0.55), hsl(var(--neon-pink) / 0.48), hsl(var(--neon-orange) / 0.42)) !important;
+    background-origin: border-box;
+    background-clip: padding-box, border-box !important;
+    border: 1px solid transparent !important;
+    color: hsl(var(--foreground)) !important;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 18px hsl(var(--neon-purple) / 0.08) !important;
+  }
+  .hero-cta-group:has(.btn-glow-neon-ghost:hover) .btn-glow-neon--projects:hover {
+    background-image: linear-gradient(135deg, hsl(var(--neon-purple)), hsl(var(--neon-pink)), hsl(var(--neon-orange))) !important;
+    background-clip: border-box !important;
+    color: hsl(var(--primary-foreground)) !important;
+    backdrop-filter: none;
+    box-shadow:
+      0 0 18px hsl(var(--neon-purple) / 0.85),
+      0 0 48px hsl(var(--neon-pink) / 0.55),
+      0 0 100px hsl(var(--neon-orange) / 0.35) !important;
+  }
+
+  /* Sobre — halo radial atrás do bloco de texto (esquerda) */
+  .about-blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(72px);
+    will-change: filter;
+  }
+  .about-blob--left {
+    left: 50%;
+    top: 52%;
+    width: clamp(416px, 101.4vw, 936px);
+    height: clamp(416px, 101.4vw, 936px);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background: radial-gradient(
+      circle at 50% 50%,
+      hsl(272 82% 52% / 0.62) 0%,
+      hsl(278 72% 42% / 0.40) 24%,
+      hsl(284 65% 34% / 0.22) 46%,
+      hsl(276 60% 28% / 0.08) 68%,
+      transparent 90%
+    );
+    opacity: 0.52;
+    box-shadow: 0 0 160px 100px hsl(274 75% 44% / 0.25);
+    transition:
+      left 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      top 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      width 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      height 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.65s ease;
+  }
+  /* Foco no planeta Quem Sou: halo atrás do bloco "Eu sou" (coluna esquerda) */
+  #about.about--blob-eu-sou .about-blob--left {
+    left: clamp(7rem, 26vw, 22rem);
+    top: clamp(38%, 52vh, 62%);
+    width: clamp(280px, 38vw, 480px);
+    height: clamp(280px, 38vw, 480px);
+    opacity: 0.62;
+  }
+
+  .about-section-body {
+    padding: 0 0.25rem 1rem;
+  }
+
+  .about-about-copy p,
+  .about-about-copy span {
+    text-shadow: 0 1px 18px hsl(0 0% 0% / 0.65);
+  }
+
+  /* ─── Page loader: átomo 3D — paleta neon do site, órbitas mais circulares ─── */
+  .page-loader {
+    @apply fixed inset-0 z-[10000] flex items-center justify-center;
+    background: hsl(var(--background));
+    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.55s step-end;
+  }
+  .page-loader--out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .page-loader__inner {
+    @apply flex flex-col items-center gap-8;
+  }
+  .page-loader__label {
+    @apply text-sm font-semibold tracking-[0.28em] uppercase text-gradient-neon;
+    filter: drop-shadow(0 0 10px hsl(var(--neon-purple) / 0.4));
+  }
+  .atom-scene {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    /* Mais perspectiva = projeção menos “achatada” */
+    perspective: 880px;
+  }
+  .atom-nucleus {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, hsl(var(--neon-purple)), hsl(var(--neon-pink)), hsl(var(--neon-orange)));
+    box-shadow:
+      0 0 12px hsl(var(--neon-purple) / 0.9),
+      0 0 26px hsl(var(--neon-pink) / 0.55),
+      0 0 44px hsl(var(--neon-orange) / 0.35);
+    z-index: 2;
+  }
+  /* Sem rotação global no grupo — senão todas as órbitas “caem” no mesmo sentido */
+  .atom-spin {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+  /* Posição do plano orbital em torno do núcleo (6 × 60°) */
+  .atom-orbit-wrap {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    pointer-events: none;
+  }
+  .atom-orbit-wrap--a {
+    transform: rotateY(0deg) rotateX(52deg);
+  }
+  .atom-orbit-wrap--b {
+    transform: rotateY(60deg) rotateX(52deg);
+  }
+  .atom-orbit-wrap--c {
+    transform: rotateY(120deg) rotateX(52deg);
+  }
+  .atom-orbit-wrap--d {
+    transform: rotateY(180deg) rotateX(52deg);
+  }
+  .atom-orbit-wrap--e {
+    transform: rotateY(240deg) rotateX(52deg);
+  }
+  .atom-orbit-wrap--f {
+    transform: rotateY(300deg) rotateX(52deg);
+  }
+  /* Precessão: o plano do anel roda em torno do núcleo — eixos distintos (LR / TB / diagonais) */
+  .atom-orbit-precess {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+  @keyframes atom-precess-lr {
+    from {
+      transform: rotateY(0deg);
+    }
+    to {
+      transform: rotateY(360deg);
+    }
+  }
+  @keyframes atom-precess-tb {
+    from {
+      transform: rotateX(0deg);
+    }
+    to {
+      transform: rotateX(360deg);
+    }
+  }
+  /* Diagonal ↗ (esquerda-baixo → direita-cima) */
+  @keyframes atom-precess-dlr {
+    from {
+      transform: rotate3d(1, 3, 0, 0deg);
+    }
+    to {
+      transform: rotate3d(1, 1, 0, 360deg);
+    }
+  }
+  /* Diagonal ↖ (direita-baixo → esquerda-cima) */
+  @keyframes atom-precess-drl {
+    from {
+      transform: rotate3d(1, -2, 0, 0deg);
+    }
+    to {
+      transform: rotate3d(1, -1, 0, 360deg);
+    }
+  }
+  .atom-orbit-precess--lr {
+    animation: atom-precess-lr 12s linear infinite;
+  }
+  .atom-orbit-precess--tb {
+    animation: atom-precess-tb 11.5s linear infinite;
+  }
+  .atom-orbit-precess--dlr {
+    animation: atom-precess-dlr 14s linear infinite;
+  }
+  .atom-orbit-precess--drl {
+    animation: atom-precess-drl 14s linear infinite;
+  }
+  .atom-orbit-precess--lr.atom-orbit-precess--rev {
+    animation: atom-precess-lr 13.5s linear infinite reverse;
+  }
+  .atom-orbit-precess--tb.atom-orbit-precess--rev {
+    animation: atom-precess-tb 10.5s linear infinite reverse;
+  }
+  /* Anel = conic-gradient (cabeça forte → cauda suave) + máscara donut; rotateZ move o “cometa” */
+  @keyframes atom-orbit-twirl {
+    from {
+      transform: rotateZ(0deg);
+    }
+    to {
+      transform: rotateZ(360deg);
+    }
+  }
+  @keyframes atom-orbit-twirl-ccw {
+    from {
+      transform: rotateZ(0deg);
+    }
+    to {
+      transform: rotateZ(-360deg);
+    }
+  }
+  .atom-orbit-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform-origin: 50% 50%;
+    will-change: transform;
+    animation: atom-orbit-twirl 2.35s linear infinite;
+    /* Furo interior + anel fino; borda exterior transparente */
+    -webkit-mask: radial-gradient(circle, transparent 53.8%, black 54.2%, black 57.2%, transparent 57.7%);
+    mask: radial-gradient(circle, transparent 53.8%, black 54.2%, black 57.2%, transparent 57.7%);
+  }
+  .atom-orbit-ring--a {
+    background: conic-gradient(
+      from 40deg,
+      hsl(var(--neon-purple)) 0deg,
+      hsl(var(--neon-purple) / 0.88) 24deg,
+      hsl(var(--neon-purple) / 0.5) 58deg,
+      hsl(var(--neon-purple) / 0.16) 88deg,
+      hsl(var(--neon-purple) / 0.04) 108deg,
+      transparent 128deg,
+      transparent 360deg
+    );
+    filter: drop-shadow(0 0 6px hsl(var(--neon-purple) / 0.65)) drop-shadow(0 0 14px hsl(var(--neon-purple) / 0.28));
+    animation-name: atom-orbit-twirl;
+    animation-duration: 2.2s;
+  }
+  .atom-orbit-ring--b {
+    background: conic-gradient(
+      from 220deg,
+      hsl(var(--neon-pink)) 0deg,
+      hsl(var(--neon-pink) / 0.9) 22deg,
+      hsl(var(--neon-pink) / 0.52) 56deg,
+      hsl(var(--neon-pink) / 0.17) 86deg,
+      hsl(var(--neon-pink) / 0.05) 106deg,
+      transparent 126deg,
+      transparent 360deg
+    );
+    filter: drop-shadow(0 0 6px hsl(var(--neon-pink) / 0.6)) drop-shadow(0 0 14px hsl(var(--neon-pink) / 0.26));
+    animation-name: atom-orbit-twirl-ccw;
+    animation-duration: 2.75s;
+  }
+  .atom-orbit-ring--c {
+    /* Perspetiva 3D encolhe esta elipse no ecrã — faixa da máscara um pouco mais larga que A/B para igualar espessura visual */
+    -webkit-mask: radial-gradient(circle, transparent 53.5%, black 53.9%, black 57.9%, transparent 58.4%);
+    mask: radial-gradient(circle, transparent 53.5%, black 53.9%, black 57.9%, transparent 58.4%);
+    background: conic-gradient(
+      from 155deg,
+      hsl(var(--neon-orange)) 0deg,
+      hsl(var(--neon-orange) / 0.88) 24deg,
+      hsl(var(--neon-orange) / 0.48) 58deg,
+      hsl(var(--neon-orange) / 0.15) 90deg,
+      hsl(var(--neon-orange) / 0.04) 110deg,
+      transparent 130deg,
+      transparent 360deg
+    );
+    filter: drop-shadow(0 0 7px hsl(var(--neon-orange) / 0.62)) drop-shadow(0 0 15px hsl(var(--neon-orange) / 0.28));
+    animation-name: atom-orbit-twirl-ccw;
+    animation-duration: 3.1s;
+  }
+  /* Misturas na paleta: roxo → rosa (cauda) */
+  .atom-orbit-ring--d {
+    background: conic-gradient(
+      from 300deg,
+      hsl(var(--neon-purple)) 0deg,
+      hsl(var(--neon-pink) / 0.9) 26deg,
+      hsl(var(--neon-pink) / 0.55) 58deg,
+      hsl(var(--neon-purple) / 0.16) 88deg,
+      hsl(var(--neon-pink) / 0.06) 108deg,
+      transparent 128deg,
+      transparent 360deg
+    );
+    filter: drop-shadow(0 0 6px hsl(var(--neon-purple) / 0.45)) drop-shadow(0 0 10px hsl(var(--neon-pink) / 0.35))
+      drop-shadow(0 0 14px hsl(var(--neon-pink) / 0.2));
+    animation-name: atom-orbit-twirl;
+    animation-duration: 2.5s;
+  }
+  /* Misturas na paleta: rosa → laranja (cauda) */
+  .atom-orbit-ring--e {
+    background: conic-gradient(
+      from 85deg,
+      hsl(var(--neon-pink)) 0deg,
+      hsl(var(--neon-orange) / 0.92) 30deg,
+      hsl(var(--neon-orange) / 0.5) 60deg,
+      hsl(var(--neon-pink) / 0.14) 90deg,
+      hsl(var(--neon-orange) / 0.05) 110deg,
+      transparent 130deg,
+      transparent 360deg
+    );
+    filter: drop-shadow(0 0 6px hsl(var(--neon-pink) / 0.4)) drop-shadow(0 0 10px hsl(var(--neon-orange) / 0.38))
+      drop-shadow(0 0 14px hsl(var(--neon-orange) / 0.2));
+    animation-name: atom-orbit-twirl-ccw;
+    animation-duration: 3.35s;
+  }
+  /* Segunda linha roxa (só neon-purple) */
+  .atom-orbit-ring--f {
+    background: conic-gradient(
+      from 275deg,
+      hsl(var(--neon-purple)) 0deg,
+      hsl(var(--neon-purple) / 0.88) 24deg,
+      hsl(var(--neon-purple) / 0.5) 58deg,
+      hsl(var(--neon-purple) / 0.16) 88deg,
+      hsl(var(--neon-purple) / 0.04) 108deg,
+      transparent 128deg,
+      transparent 360deg
+    );
+    filter: drop-shadow(0 0 6px hsl(var(--neon-purple) / 0.65)) drop-shadow(0 0 14px hsl(var(--neon-purple) / 0.28));
+    animation-name: atom-orbit-twirl-ccw;
+    animation-duration: 2.65s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .atom-spin,
+    .atom-orbit-precess--lr,
+    .atom-orbit-precess--tb,
+    .atom-orbit-precess--dlr,
+    .atom-orbit-precess--drl,
+    .atom-orbit-ring--a,
+    .atom-orbit-ring--b,
+    .atom-orbit-ring--c,
+    .atom-orbit-ring--d,
+    .atom-orbit-ring--e,
+    .atom-orbit-ring--f {
+      animation: none !important;
+    }
+  }
+
+  /* Contact social stack effect */
+  .contact-social-stack {
+    --card-w: 11.64rem;
+    --card-h: 17.28rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.95rem;
+    list-style: none;
+    padding: 0;
+    margin-inline: auto;
+    transform: perspective(920px) rotateX(46deg) rotateZ(-33deg);
+    transform-style: preserve-3d;
+  }
+
+  .contact-social-stack li {
+    position: relative;
+    width: var(--card-w);
+    height: var(--card-h);
+    transform-style: preserve-3d;
+    animation: contact-card-tilt-breathe 3.7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .contact-social-stack li:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .contact-social-stack li:nth-child(2) {
+    animation-delay: 0.22s;
+  }
+
+  .contact-social-stack li:nth-child(3) {
+    animation-delay: 0.44s;
+  }
+
+  .contact-social-stack li:nth-child(4) {
+    animation-delay: 0.66s;
+  }
+
+  .contact-social-stack li a {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.42rem;
+    background: linear-gradient(180deg, hsl(240 8% 16%), hsl(240 10% 10%));
+    border: 1px solid hsl(240 8% 22% / 0.46);
+    box-shadow:
+      0 10px 22px hsl(240 22% 2% / 0.76),
+      inset 0 1px 0 hsl(0 0% 100% / 0.04);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: hsl(240 6% 36%);
+    transition: transform 260ms ease, color 260ms ease, background 260ms ease;
+    transform-style: preserve-3d;
+  }
+
+  .contact-social-stack li a svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    width: 2.33rem;
+    height: 2.33rem;
+    display: block;
+    transform: translate3d(-50%, -50%, 30px);
+    transition: transform 280ms ease, color 280ms ease;
+    pointer-events: none;
+  }
+
+  .contact-social-stack li:nth-child(1) a svg {
+    transform: translate3d(calc(-50% - 5px), -50%, 30px);
+  }
+
+  .contact-social-stack li a span {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.42rem;
+    border: 1px solid hsl(240 8% 24% / 0.45);
+    background: hsl(240 10% 11% / 0.55);
+    transition: transform 280ms ease, opacity 280ms ease, background 280ms ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .contact-social-stack li:hover a {
+    transform: translate3d(0, -2px, 14px);
+    color: hsl(0 0% 100%);
+  }
+
+  .contact-social-stack li:hover a svg {
+    transform: translate3d(calc(-50% + 28px), calc(-50% - 28px), 48px);
+  }
+
+  .contact-social-stack li:nth-child(1):hover a svg {
+    transform: translate3d(calc(-50% + 23px), calc(-50% - 28px), 48px);
+  }
+
+  .contact-social-stack li:nth-child(2) a svg {
+    transform: translate3d(calc(-50% - 14px), -50%, 30px);
+  }
+
+  .contact-social-stack li:nth-child(2):hover a svg {
+    transform: translate3d(calc(-50% + 27px), calc(-50% - 28px), 48px);
+  }
+
+  .contact-social-stack li:hover a span:nth-child(1) {
+    opacity: 0.12;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .contact-social-stack li:hover a span:nth-child(2) {
+    opacity: 0.28;
+    transform: translate3d(10px, -10px, 8px);
+  }
+
+  .contact-social-stack li:hover a span:nth-child(3) {
+    opacity: 0.36;
+    transform: translate3d(16px, -16px, 12px);
+  }
+
+  .contact-social-stack li:hover a span:nth-child(4) {
+    opacity: 0.46;
+    transform: translate3d(22px, -22px, 16px);
+  }
+
+  .contact-social-stack li:hover a span:nth-child(5) {
+    opacity: 0.56;
+    transform: translate3d(28px, -28px, 20px);
+  }
+
+  .contact-social-stack li:nth-child(1):hover a,
+  .contact-social-stack li:nth-child(1):hover a span {
+    background: linear-gradient(270deg, #ff4f9f, #ff5f8f, #ff8a7a);
+    background-size: 800% 800%;
+    animation: contact-gradient 6s ease infinite;
+  }
+
+  .contact-social-stack li:nth-child(2):hover a,
+  .contact-social-stack li:nth-child(2):hover a span {
+    background: linear-gradient(270deg, #4dc9ff, #0077b2);
+    background-size: 400% 400%;
+    animation: contact-gradient 6s ease infinite;
+  }
+
+  .contact-social-stack li:nth-child(3):hover a,
+  .contact-social-stack li:nth-child(3):hover a span {
+    background: linear-gradient(270deg, #25d366, #128c7e);
+    background-size: 400% 400%;
+    animation: contact-gradient 6s ease infinite;
+  }
+
+  .contact-social-stack li:nth-child(3) a svg {
+    transform: translate3d(calc(-50% - 19px), -50%, 30px);
+  }
+
+  .contact-social-stack li:nth-child(3):hover a svg {
+    transform: translate3d(calc(-50% + 25px), calc(-50% - 28px), 48px);
+  }
+
+  .contact-social-stack li:nth-child(4):hover a,
+  .contact-social-stack li:nth-child(4):hover a span {
+    background: linear-gradient(270deg, #a047ff, #7a24d8);
+    background-size: 400% 400%;
+    animation: contact-gradient 6s ease infinite;
+  }
+
+  .contact-social-stack li:nth-child(4) a svg {
+    transform: translate3d(calc(-50% - 30px), -50%, 30px);
+  }
+
+  .contact-social-stack li:nth-child(4):hover a svg {
+    transform: translate3d(calc(-50% + 25px), calc(-50% - 28px), 48px);
+  }
+
+  @keyframes contact-gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes contact-card-tilt-breathe {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1);
+    }
+    25% {
+      transform: translate3d(0, -6px, 0) rotateZ(-1.2deg) scale(1.018);
+    }
+    50% {
+      transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1.01);
+    }
+    75% {
+      transform: translate3d(0, 6px, 0) rotateZ(1.2deg) scale(0.992);
+    }
+  }
+}
