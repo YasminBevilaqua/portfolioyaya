@@ -57,7 +57,7 @@ function restoreScrollPositionImmediate(y: number) {
   html.style.scrollBehavior = prev;
 }
 
-const FOCUS_COPY: { title: string; body: string; body2?: string }[] = [
+const FOCUS_COPY: { title: string; body: string; body2?: string; body3?: string }[] = [
   {
     title: 'Experiência & stack',
     body: 'Formação em ADS e foco em front-end moderno: React, TypeScript e interfaces responsivas, com atenção a performance e acessibilidade.',
@@ -69,9 +69,11 @@ const FOCUS_COPY: { title: string; body: string; body2?: string }[] = [
   {
     title: 'Eu sou',
     body:
-      'Desenvolvedora Front-End em formação, sou apaixonada por criar interfaces que não sejam apenas funcionais, mas que também proporcionem boas experiências para quem usa.',
+      'Desenvolvedora Front-End focada na construção de interfaces estruturadas e consistentes. Trabalho com componentização, arquitetura de interface e layouts responsivos, explorando animações e renderização com Canvas e experiências 3D com Three.js.',
     body2:
-      'Gosto de transformar ideias em soluções visuais bem estruturadas, sempre buscando evoluir tecnicamente e aprimorar a forma como construo cada detalhe — da interação à performance.',
+      'Tenho interesse em trabalhar com interfaces bem definidas, onde cada elemento tem função clara e o comportamento acompanha a lógica do sistema alinhado à estrutura do projeto.',
+    body3:
+      'Fora do código, gosto de desenhar e tocar ocarina— dois espaços onde também trabalho composição, ritmo e detalhe.  :)',
   },
 ];
 
@@ -765,6 +767,11 @@ export default function AboutPlanet({
                 {copy.body2 ? (
                   <p className="mt-3 text-base leading-relaxed text-white/90 [text-shadow:0_1px_18px_rgba(0,0,0,0.75)] sm:mt-4 sm:text-lg lg:text-xl">
                     {copy.body2}
+                  </p>
+                ) : null}
+                {copy.body3 ? (
+                  <p className="mt-3 text-base leading-relaxed text-white/90 [text-shadow:0_1px_18px_rgba(0,0,0,0.75)] sm:mt-4 sm:text-lg lg:text-xl">
+                    {copy.body3}
                   </p>
                 ) : null}
               </>

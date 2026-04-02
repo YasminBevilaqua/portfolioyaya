@@ -16,12 +16,12 @@ export default function Contact() {
       className="section-soft-bg section-padding-top relative z-10 flex min-h-screen min-h-dvh flex-col pb-32 px-6"
     >
       <div className="container min-h-[55vh] max-w-6xl">
-        <div className="grid items-start gap-16 md:grid-cols-[minmax(0,1fr)_auto]">
-          <div className="mt-2 flex w-full max-w-md flex-col items-center justify-self-center px-0 md:mt-8 md:items-start md:justify-self-start md:pl-32">
+        <div className="grid items-start gap-16 md:grid-cols-[minmax(min-content,1fr)_auto]">
+          <div className="mt-2 flex w-full min-w-0 flex-col items-center justify-self-center px-0 md:mt-8 md:items-start md:justify-self-start md:pl-32">
             <SectionTitle
               title="Contato"
               subtitle="Me encontre nas redes"
-              subtitleClassName="max-md:whitespace-normal whitespace-nowrap"
+              subtitleClassName="w-max max-w-none whitespace-nowrap"
               responsiveAlign
             />
           </div>

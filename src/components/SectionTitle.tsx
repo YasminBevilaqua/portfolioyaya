@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 import ScrollReveal from './ScrollReveal';
 
 export default function SectionTitle({
@@ -26,12 +27,11 @@ export default function SectionTitle({
       ? 'mb-12 text-left md:mb-16'
       : 'mb-16 text-center';
 
-  const subtitleClass =
-    responsiveAlign
-      ? `mt-4 text-gradient-neon max-w-2xl mx-auto md:mx-0 text-lg font-semibold leading-snug ${subtitleClassName ?? ''}`
-      : align === 'center'
-        ? `mt-4 text-gradient-neon max-w-2xl mx-auto text-lg font-semibold leading-snug ${subtitleClassName ?? ''}`
-        : `mt-4 text-gradient-neon max-w-2xl text-lg font-semibold leading-snug ${subtitleClassName ?? ''}`;
+  const subtitleClass = cn(
+    'mt-4 text-gradient-neon max-w-2xl text-lg font-semibold leading-snug',
+    responsiveAlign ? 'mx-auto md:mx-0' : align === 'center' ? 'mx-auto' : null,
+    subtitleClassName,
+  );
 
   return (
     <ScrollReveal className={scrollClass}>
