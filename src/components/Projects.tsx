@@ -9,6 +9,7 @@ type ProjectCard = {
   stack: string[];
   liveUrl?: string;
   githubUrl?: string;
+  image?: string;
 };
 
 const projects: ProjectCard[] = [
@@ -18,11 +19,16 @@ const projects: ProjectCard[] = [
       'Chat com IA que transforma conversas em experiencia: respostas naturais, interface imersiva e fluxo pensado para engajar do primeiro prompt ao insight final.',
     stack: ['Vite', 'React', 'TypeScript', 'Tailwind', 'shadcn/ui', 'Groq', 'Three.js'],
     liveUrl: 'https://nebulamind-ai.vercel.app/',
+    githubUrl: 'https://github.com/YasminBevilaqua/NebulaMind',
+    image: '/assets/images/capanebulamind.png',
   },
   {
-    title: 'App Delta Mobile',
-    description: 'Aplicação mobile com integração de hardware serial e recursos de IA para automação industrial.',
-    stack: ['React Native', 'Expo', 'TypeScript', 'REST APIs'],
+    title: 'Spatialify',
+    description: 'Spatialify é uma extensão de navegador que transforma áudio comum em uma experiência espacial imersiva, adicionando profundidade, direção e movimento em tempo real.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'Mozilla Add-ons'],
+    liveUrl: 'https://yasminbevilaqua.github.io/SpatialifyWebSite/',
+    githubUrl: 'https://github.com/YasminBevilaqua/Spatialify',
+    image: '/assets/images/capaspatialify.png',
   },
   {
     title: 'Dashboard Analytics',
@@ -45,26 +51,47 @@ export default function Projects() {
             <ScrollReveal key={p.title} delay={i * 0.12}>
               <motion.div
                 whileHover={{ y: -6 }}
-                className={`glass rounded-2xl overflow-hidden neon-border group h-full flex flex-col ${p.liveUrl ? 'cursor-pointer' : ''}`}
-                onClick={() => {
-                  if (p.liveUrl) window.open(p.liveUrl, '_blank', 'noopener,noreferrer');
-                }}
-                onKeyDown={e => {
-                  if (!p.liveUrl) return;
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    window.open(p.liveUrl, '_blank', 'noopener,noreferrer');
-                  }
-                }}
-                role={p.liveUrl ? 'link' : undefined}
-                tabIndex={p.liveUrl ? 0 : -1}
+                className="glass rounded-2xl overflow-hidden neon-border group h-full flex flex-col"
               >
-                {/* Gradient placeholder top */}
-                <div className="h-40 bg-gradient-to-br from-neon-purple/20 via-neon-pink/10 to-neon-orange/20 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-foreground/10 group-hover:text-foreground/20 transition-colors">
-                    {p.title[0]}
-                  </span>
-                </div>
+                {/* Project image or gradient placeholder - clickable to open project */}
+                {p.liveUrl ? (
+                  <a
+                    href={p.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="h-40 overflow-hidden block cursor-pointer"
+                  >
+                    {p.image ? (
+                      <img
+                        src={p.image}
+                        alt={p.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="h-full bg-gradient-to-br from-neon-purple/20 via-neon-pink/10 to-neon-orange/20 flex items-center justify-center">
+                        <span className="text-3xl font-bold text-foreground/10 group-hover:text-foreground/20 transition-colors">
+                          {p.title[0]}
+                        </span>
+                      </div>
+                    )}
+                  </a>
+                ) : (
+                  <div className="h-40 overflow-hidden">
+                    {p.image ? (
+                      <img
+                        src={p.image}
+                        alt={p.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="h-full bg-gradient-to-br from-neon-purple/20 via-neon-pink/10 to-neon-orange/20 flex items-center justify-center">
+                        <span className="text-3xl font-bold text-foreground/10 group-hover:text-foreground/20 transition-colors">
+                          {p.title[0]}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="p-6 flex flex-col flex-1">
                   <h3 className="text-lg font-semibold text-foreground mb-2">{p.title}</h3>
@@ -96,7 +123,7 @@ export default function Projects() {
                         href={p.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-white transition-colors"
                       >
                         <Github size={14} /> GitHub
                       </a>
