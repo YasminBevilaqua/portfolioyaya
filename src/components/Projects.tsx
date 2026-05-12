@@ -20,7 +20,7 @@ const projects: ProjectCard[] = [
     stack: ['Vite', 'React', 'TypeScript', 'Tailwind', 'shadcn/ui', 'Groq', 'Three.js'],
     liveUrl: 'https://nebulamind-ai.vercel.app/',
     githubUrl: 'https://github.com/YasminBevilaqua/NebulaMind',
-    image: '/assets/images/capanebulamind.png',
+    image: 'assets/images/capanebulamind.png',
   },
   {
     title: 'Spatialify',
@@ -28,7 +28,7 @@ const projects: ProjectCard[] = [
     stack: ['HTML', 'CSS', 'JavaScript', 'Mozilla Add-ons'],
     liveUrl: 'https://yasminbevilaqua.github.io/SpatialifyWebSite/',
     githubUrl: 'https://github.com/YasminBevilaqua/Spatialify',
-    image: '/assets/images/capaspatialify.png',
+    image: 'assets/images/capaspatialify.png',
   },
   {
     title: 'Dashboard Analytics',
